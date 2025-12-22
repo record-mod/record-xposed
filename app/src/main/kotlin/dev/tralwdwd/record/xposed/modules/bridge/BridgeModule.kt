@@ -1,10 +1,11 @@
-package io.github.revenge.xposed.modules.bridge
+package dev.tralwdwd.record.xposed.modules.bridge
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.revenge.xposed.BuildConfig
-import io.github.revenge.xposed.Constants
-import io.github.revenge.xposed.Module
-import io.github.revenge.xposed.Utils.Log
+import dev.tralwdwd.record.xposed.BuildConfig
+import dev.tralwdwd.record.xposed.Constants
+import dev.tralwdwd.record.xposed.Module
+import dev.tralwdwd.record.xposed.Utils.Log
+import android.os.Build
 import java.lang.reflect.Method
 
 /**
@@ -23,7 +24,7 @@ typealias BridgeMethodArgs = ArrayList<Any>
  * To call a method, pass an object with the following structure to a hooked method:
  * ```js
  * {
- *   revenge: {
+ *   record: {
  *     method: "method.name",
  *     args: [arg1, arg2, ...]
  *   }
@@ -50,7 +51,7 @@ object BridgeModule : Module() {
     private lateinit var readableMapToHashMap: Method
     private lateinit var argumentsMakeNative: Method
 
-    private const val CALL_DATA_KEY = "revenge"
+    private const val CALL_DATA_KEY = "record"
     private const val METHOD_NAME_KEY = "method"
     private const val METHOD_ARGS_KEY = "args"
 
@@ -105,13 +106,19 @@ object BridgeModule : Module() {
     }
 
     private fun registerDefaultMethods() {
-        methods["revenge.info"] = {
+        methods["record.info"] = {
             mapOf(
-                "name" to Constants.LOADER_NAME, "version" to BuildConfig.VERSION_CODE
+                "name" to Constants.LOADER_NAME,
+                "version" to BuildConfig.VERSION_CODE,
+                "android" to mapOf(
+                    "version" to Build.VERSION.RELEASE,
+                    "api" to Build.VERSION.SDK_INT,
+                    "codeName" to Build.DEVICE,
+                )
             )
         }
 
-        methods["revenge.test"] = {
+        methods["record.test"] = {
             mapOf(
                 "string" to "string",
                 "number" to 7256,

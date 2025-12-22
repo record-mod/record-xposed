@@ -1,10 +1,10 @@
-package io.github.revenge.xposed.modules
+package dev.tralwdwd.record.xposed.modules
 
 import android.content.Context
 import android.util.AtomicFile
-import io.github.revenge.xposed.Module
-import io.github.revenge.xposed.Utils.Log
-import io.github.revenge.xposed.modules.bridge.BridgeModule
+import dev.tralwdwd.record.xposed.Module
+import dev.tralwdwd.record.xposed.Utils.Log
+import dev.tralwdwd.record.xposed.modules.bridge.BridgeModule
 import java.io.*
 
 /**
@@ -12,15 +12,15 @@ import java.io.*
  *
  * ## Methods
  *
- * - `revenge.plugins.states.read(): { flags: { [pluginId: string]: number } }`
+ * - `record.plugins.states.read(): { flags: { [pluginId: string]: number } }`
  * - Reads the current plugin states from the file and returns them as a map.
  *
- * - `revenge.plugins.states.write(flags: { [pluginId: string]: number }): void`
+ * - `record.plugins.states.write(flags: { [pluginId: string]: number }): void`
  * - Writes the provided plugin states to the file.
  */
 class PluginsModule : Module() {
     private companion object {
-        const val DATA_DIR = "revenge/plugins"
+        const val DATA_DIR = "record/plugins"
         const val STATES_FILE = "states"
     }
 
@@ -33,7 +33,7 @@ class PluginsModule : Module() {
             dataDir, STATES_FILE
         ).apply { asFile() }
 
-        BridgeModule.registerMethod("revenge.plugins.states.read") {
+        BridgeModule.registerMethod("record.plugins.states.read") {
             if (::states.isInitialized) states.toMap() else
                 PluginStates.loadFromFileOrNull(statesFile)?.let {
                     states = it
@@ -41,7 +41,7 @@ class PluginsModule : Module() {
                 }
         }
 
-        BridgeModule.registerMethod("revenge.plugins.states.write") {
+        BridgeModule.registerMethod("record.plugins.states.write") {
             val (flags) = it
             @Suppress("UNCHECKED_CAST")
             states = PluginStates(

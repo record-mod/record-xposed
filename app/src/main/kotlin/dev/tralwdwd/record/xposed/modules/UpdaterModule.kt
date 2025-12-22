@@ -1,4 +1,4 @@
-package io.github.revenge.xposed.modules
+package dev.tralwdwd.record.xposed.modules
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -7,12 +7,12 @@ import android.util.AtomicFile
 import android.widget.Toast
 import androidx.core.util.writeBytes
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.revenge.xposed.Constants
-import io.github.revenge.xposed.Module
-import io.github.revenge.xposed.Utils
-import io.github.revenge.xposed.Utils.Companion.JSON
-import io.github.revenge.xposed.Utils.Companion.reloadApp
-import io.github.revenge.xposed.Utils.Log
+import dev.tralwdwd.record.xposed.Constants
+import dev.tralwdwd.record.xposed.Module
+import dev.tralwdwd.record.xposed.Utils
+import dev.tralwdwd.record.xposed.Utils.Companion.JSON
+import dev.tralwdwd.record.xposed.Utils.Companion.reloadApp
+import dev.tralwdwd.record.xposed.Utils.Log
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -25,15 +25,6 @@ import kotlinx.serialization.Serializable
 import java.io.File
 import java.lang.ref.WeakReference
 
-@Serializable
-data class CustomLoadUrl(
-    val enabled: Boolean = false, val url: String = ""
-)
-
-@Serializable
-data class LoaderConfig(
-    val customLoadUrl: CustomLoadUrl = CustomLoadUrl()
-)
 
 /**
  * Module that updates the JS bundle by downloading it from a remote URL.
@@ -55,7 +46,7 @@ object UpdaterModule : Module() {
     private const val CONFIG_FILE = "loader.json"
 
     private const val DEFAULT_BUNDLE_URL =
-        "https://github.com/revenge-mod/revenge-bundle/releases/latest/download/revenge.min.js"
+        "http://192.168.0.227:4040/record.js"
 
     override fun onLoad(packageParam: XC_LoadPackage.LoadPackageParam) = with(packageParam) {
         cacheDir = File(appInfo.dataDir, Constants.CACHE_DIR).apply { mkdirs() }
@@ -66,11 +57,7 @@ object UpdaterModule : Module() {
 
         val configFile = File(filesDir, CONFIG_FILE)
 
-        config = runCatching {
-            if (configFile.exists()) {
-                JSON.decodeFromString<LoaderConfig>(configFile.readText())
-            } else LoaderConfig()
-        }.getOrDefault(LoaderConfig())
+        config = LoaderConfigModule.loaderConfig
     }
 
     fun downloadScript(activity: Activity? = null): Job = scope.launch {
@@ -80,7 +67,7 @@ object UpdaterModule : Module() {
                 install(UserAgent) { agent = Constants.USER_AGENT }
                 install(HttpRedirect) {}
             }.use { client ->
-                val url = config.customLoadUrl.takeIf { it.enabled }?.url ?: DEFAULT_BUNDLE_URL
+                val url = config.takeIf { it.isCustomBundle!! }?.customBundleUrl ?: DEFAULT_BUNDLE_URL
                 Log.i("Fetching JS bundle from: $url")
 
                 val response: HttpResponse = client.get(url) {
@@ -164,9 +151,7 @@ object UpdaterModule : Module() {
         }
     }
 
-    fun resetLoaderConfig(context: Context) {
-        val filesDir = File(context.dataDir, Constants.FILES_DIR)
-        val config = File(filesDir, CONFIG_FILE)
-        if (config.exists()) config.delete()
+    fun resetLoaderConfig() {
+        LoaderConfigModule.resetConfig()
     }
 }

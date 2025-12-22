@@ -1,9 +1,9 @@
-package io.github.revenge.xposed.modules
+package dev.tralwdwd.record.xposed.modules
 
 import android.content.res.Resources
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.revenge.xposed.Constants.Companion.TARGET_PACKAGE
-import io.github.revenge.xposed.Module
+import dev.tralwdwd.record.xposed.Constants.Companion.TARGET_PACKAGE
+import dev.tralwdwd.record.xposed.Module
 
 /**
  * Hooks [Resources.getIdentifier] to fix resource package name mismatch.

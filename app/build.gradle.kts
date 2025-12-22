@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    namespace = "io.github.revenge.xposed"
+    namespace = "dev.tralwdwd.record.xposed"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "io.github.revenge.xposed"
-        minSdk = 24
+        applicationId = "dev.tralwdwd.record.xposed"
+        minSdk = 26
         targetSdk = 36
         versionCode = 1409
         versionName = "1.4.9"
@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.13.1")
     compileOnly("de.robv.android.xposed:api:82")
 
     implementation("androidx.core:core-ktx:1.17.0")

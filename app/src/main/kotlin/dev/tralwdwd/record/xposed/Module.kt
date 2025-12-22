@@ -1,4 +1,4 @@
-package io.github.revenge.xposed
+package dev.tralwdwd.record.xposed
 
 import android.app.Activity
 import android.content.Context

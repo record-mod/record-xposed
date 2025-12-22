@@ -1,14 +1,14 @@
-package io.github.revenge.xposed.modules
+package dev.tralwdwd.record.xposed.modules
 
 import android.content.res.AssetManager
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.revenge.xposed.BuildConfig
-import io.github.revenge.xposed.Constants
-import io.github.revenge.xposed.Module
-import io.github.revenge.xposed.Utils.Companion.JSON
-import io.github.revenge.xposed.modules.HookScriptLoaderModule.PRELOADS_DIR
+import dev.tralwdwd.record.xposed.BuildConfig
+import dev.tralwdwd.record.xposed.Constants
+import dev.tralwdwd.record.xposed.Module
+import dev.tralwdwd.record.xposed.Utils.Companion.JSON
+import dev.tralwdwd.record.xposed.modules.HookScriptLoaderModule.PRELOADS_DIR
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.io.File

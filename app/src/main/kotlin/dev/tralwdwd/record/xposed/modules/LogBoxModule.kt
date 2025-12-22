@@ -1,12 +1,12 @@
-package io.github.revenge.xposed.modules
+package dev.tralwdwd.record.xposed.modules
 
 import android.content.Context
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.revenge.xposed.BuildConfig
-import io.github.revenge.xposed.Module
-import io.github.revenge.xposed.Utils
-import io.github.revenge.xposed.Utils.Companion.reloadApp
-import io.github.revenge.xposed.Utils.Log
+import dev.tralwdwd.record.xposed.BuildConfig
+import dev.tralwdwd.record.xposed.Module
+import dev.tralwdwd.record.xposed.Utils
+import dev.tralwdwd.record.xposed.Utils.Companion.reloadApp
+import dev.tralwdwd.record.xposed.Utils.Log
 
 object LogBoxModule : Module() {
     lateinit var packageParam: XC_LoadPackage.LoadPackageParam

@@ -1,11 +1,11 @@
-package io.github.revenge.xposed.modules.appearance
+package dev.tralwdwd.record.xposed.modules.appearance
 
 import android.R.color
 import android.app.AndroidAppHelper
 import android.content.Context
 import android.os.Build
 import androidx.core.content.ContextCompat
-import io.github.revenge.xposed.Module
+import dev.tralwdwd.record.xposed.Module
 import kotlinx.serialization.json.*
 import java.lang.ref.WeakReference
 

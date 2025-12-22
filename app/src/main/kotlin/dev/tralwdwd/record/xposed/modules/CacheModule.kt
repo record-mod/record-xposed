@@ -1,10 +1,10 @@
-package io.github.revenge.xposed.modules
+package dev.tralwdwd.record.xposed.modules
 
 import android.content.Context
 import android.util.AtomicFile
-import io.github.revenge.xposed.Module
-import io.github.revenge.xposed.Utils.Log
-import io.github.revenge.xposed.modules.bridge.BridgeModule
+import dev.tralwdwd.record.xposed.Module
+import dev.tralwdwd.record.xposed.Utils.Log
+import dev.tralwdwd.record.xposed.modules.bridge.BridgeModule
 import java.io.*
 
 /**
@@ -16,18 +16,18 @@ import java.io.*
  *
  * ### Modules cache
  *
- * - `revenge.caches.modules.read() : { blacklist: number[], finds: { [filter: string]: { [id: string]: number } | null }, version: number } | null`
+ * - `record.caches.modules.read() : { blacklist: number[], finds: { [filter: string]: { [id: string]: number } | null }, version: number } | null`
  * - Reads the modules cache. Returns `null` if the cache file does not exist or is invalid.
  *
- * - `revenge.caches.modules.write(blacklist: number[], finds: { [filter: string]: { [id: string]: number } | null }) : void`
+ * - `record.caches.modules.write(blacklist: number[], finds: { [filter: string]: { [id: string]: number } | null }) : void`
  * - Writes the modules cache.
  *
  *  ### Assets cache
  *
- * - `revenge.caches.assets.read() : { data: { [name: string]: { [type: string]: number } }, version: number } | null`
+ * - `record.caches.assets.read() : { data: { [name: string]: { [type: string]: number } }, version: number } | null`
  * - Reads the assets cache. Returns `null` if the cache file does not exist or is invalid.
  *
- * - `revenge.caches.assets.write(data: { [name: string]: { [type: string]: number } }) : void`
+ * - `record.caches.assets.write(data: { [name: string]: { [type: string]: number } }) : void`
  * - Writes the assets cache.
  *
  *  The caches are versioned and tied to the app version code. When the app is updated,
@@ -35,7 +35,7 @@ import java.io.*
  */
 object CacheModule : Module() {
 
-    private const val CACHE_DIR = "revenge"
+    private const val CACHE_DIR = "record"
 
     private const val MODULES_CACHE_PREFIX = "modules"
     private const val ASSETS_CACHE_PREFIX = "assets"
@@ -45,18 +45,18 @@ object CacheModule : Module() {
     private lateinit var assetsCache: AssetsCache
 
     override fun onContext(context: Context) = with(context) {
-        val revengeCacheDir = File(cacheDir, CACHE_DIR).apply { asDir() }
+        val recordCacheDir = File(cacheDir, CACHE_DIR).apply { asDir() }
         val (_, _, _, versionCode) = getAppInfo()
 
         val modulesCacheFile = File(
-            revengeCacheDir, "$MODULES_CACHE_PREFIX.$versionCode"
+            recordCacheDir, "$MODULES_CACHE_PREFIX.$versionCode"
         ).apply { asFile() }
 
         val assetsCacheFile = File(
-            revengeCacheDir, "$ASSETS_CACHE_PREFIX.$versionCode"
+            recordCacheDir, "$ASSETS_CACHE_PREFIX.$versionCode"
         ).apply { asFile() }
 
-        BridgeModule.registerMethod("revenge.caches.modules.read") {
+        BridgeModule.registerMethod("record.caches.modules.read") {
             if (::modulesCache.isInitialized) modulesCache.toMap() else ModulesCache.loadFromFileOrNull(modulesCacheFile)
                 ?.let {
                     modulesCache = it
@@ -64,7 +64,7 @@ object CacheModule : Module() {
                 }
         }
 
-        BridgeModule.registerMethod("revenge.caches.modules.write") {
+        BridgeModule.registerMethod("record.caches.modules.write") {
             val (blacklist, finds) = it
             @Suppress("UNCHECKED_CAST")
             modulesCache = ModulesCache(
@@ -73,7 +73,7 @@ object CacheModule : Module() {
             Log.i("Modules cache saved: ${modulesCacheFile.absolutePath} (blacklisted: ${blacklist.size}, finds: ${finds.size})")
         }
 
-        BridgeModule.registerMethod("revenge.caches.assets.read") {
+        BridgeModule.registerMethod("record.caches.assets.read") {
             if (::assetsCache.isInitialized) assetsCache.toMap() else AssetsCache.loadFromFileOrNull(assetsCacheFile)
                 ?.let {
                     assetsCache = it
@@ -81,7 +81,7 @@ object CacheModule : Module() {
                 }
         }
 
-        BridgeModule.registerMethod("revenge.caches.assets.write") {
+        BridgeModule.registerMethod("record.caches.assets.write") {
             val (data) = it
             @Suppress("UNCHECKED_CAST")
             assetsCache =

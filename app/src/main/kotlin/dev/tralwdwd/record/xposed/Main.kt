@@ -1,4 +1,4 @@
-package io.github.revenge.xposed
+package dev.tralwdwd.record.xposed
 
 import android.app.Activity
 import android.content.Context
@@ -7,15 +7,15 @@ import android.os.Bundle
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import io.github.revenge.xposed.Utils.Log
-import io.github.revenge.xposed.modules.*
-import io.github.revenge.xposed.modules.appearance.FontsModule
-import io.github.revenge.xposed.modules.appearance.SysColorsModule
-import io.github.revenge.xposed.modules.appearance.ThemesModule
-import io.github.revenge.xposed.modules.bridge.AdditionalBridgeMethodsModule
-import io.github.revenge.xposed.modules.bridge.BridgeModule
-import io.github.revenge.xposed.modules.no_track.BlockCrashReportingModule
-import io.github.revenge.xposed.modules.no_track.BlockDeepLinksTrackingModule
+import dev.tralwdwd.record.xposed.Utils.Log
+import dev.tralwdwd.record.xposed.modules.*
+import dev.tralwdwd.record.xposed.modules.appearance.FontsModule
+import dev.tralwdwd.record.xposed.modules.appearance.SysColorsModule
+import dev.tralwdwd.record.xposed.modules.appearance.ThemesModule
+import dev.tralwdwd.record.xposed.modules.bridge.AdditionalBridgeMethodsModule
+import dev.tralwdwd.record.xposed.modules.bridge.BridgeModule
+import dev.tralwdwd.record.xposed.modules.no_track.BlockCrashReportingModule
+import dev.tralwdwd.record.xposed.modules.no_track.BlockDeepLinksTrackingModule
 import kotlinx.coroutines.CompletableDeferred
 
 object HookStateHolder {
@@ -36,11 +36,13 @@ object HookStateHolder {
 class Main : Module(), IXposedHookLoadPackage, IXposedHookZygoteInit {
     private var hooked = false
     private val modules = mutableListOf(
-        HookScriptLoaderModule,
         BridgeModule,
         AdditionalBridgeMethodsModule,
-        PluginsModule(),
+        ConfigModule,
+        LoaderConfigModule,
         UpdaterModule,
+        HookScriptLoaderModule,
+        PluginsModule(),
         FixResourcesModule,
         BlockDeepLinksTrackingModule,
         BlockCrashReportingModule,
