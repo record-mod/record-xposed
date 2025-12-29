@@ -12,8 +12,8 @@ android {
         applicationId = "dev.tralwdwd.record.xposed"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1500
-        versionName = "1.5.0"
+        versionCode = 1501
+        versionName = "1.5.1"
     }
 
     buildTypes {
