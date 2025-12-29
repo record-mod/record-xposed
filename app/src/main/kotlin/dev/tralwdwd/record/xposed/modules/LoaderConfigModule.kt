@@ -116,7 +116,7 @@ object LoaderConfigModule : Module() {
 
     fun saveConfig(config: LoaderConfig) {
         cachedConfig = config
-        ConfigModule.set("loader", ConfigModule.anyToJson(config))
+        ConfigModule.set("loader", JSON.encodeToJsonElement(LoaderConfig.serializer(), config))
     }
 
     fun resetConfig() {
